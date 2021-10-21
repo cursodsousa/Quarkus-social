@@ -1,0 +1,205 @@
+swagger: "2.0"
+info:
+  description: "This is a documentation for a API Rest using Quarkus"
+  version: "1.0.0"
+  title: "Quarkus Social"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "dougllasfps@email.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "quarkussocial.github.io"
+basePath: "/"
+tags:
+  - name: "user"
+    description: "operations about users"
+  - name: "post"
+    description: "Users posts"
+  - name: "followers"
+    description: "Users followers"
+
+paths:
+  /users:
+    get:
+      tags:
+        - "user"
+      summary: "List all Users"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+    post:
+      tags:
+        - "user"
+      summary: "Create new User"
+      description: ""
+      operationId: "addUser"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "User Request Data"
+          description: "User data"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateUserRequest"
+      responses:
+        "422":
+          description: "Invalid input"
+        "201":
+          description: "User created"
+
+  /users/{userId}/posts:
+    post:
+      tags:
+        - "post"
+      summary: "Create a post for a user"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+
+      parameters:
+        - in: "body"
+          name: "User Post Data"
+          required: true
+          schema:
+            $ref: "#/definitions/CreatePostRequest"
+        - name: userId
+          description: the user identifier, as userId
+          in: path
+          required: true
+          type: "string"
+
+      responses:
+        "422":
+          description: "Invalid input"
+        "201":
+          description: "Post created"
+    get:
+      tags:
+        - "post"
+      summary: "Lists all posts of a user"
+      produces:
+        - "application/json"
+      parameters:
+        - name: userId
+          description: "the user identifier, as userId"
+          in: path
+          required: true
+          type: "string"
+
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/PostResponse"
+
+  /users/{userId}/followers:
+    put:
+      tags:
+        - "followers"
+      parameters:
+        - name: userId
+          description: "the user identifier, as userId"
+          in: path
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/FollowerRequest"
+
+    get:
+      tags:
+        - "followers"
+      parameters:
+        - name: userId
+          description: "the user identifier, as userId"
+          in: path
+          required: true
+          type: "integer"
+
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/FollowersPerUserResponse"
+
+
+
+definitions:
+  CreateUserRequest:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      age:
+        type: "integer"
+        format: "int64"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+      age:
+        type: "integer"
+        format: "int64"
+
+  CreatePostRequest:
+    type: "object"
+    properties:
+      text:
+        type: "string"
+
+  PostResponse:
+    type: "object"
+    properties:
+      text:
+        type: "string"
+      dateTime:
+        type: "string"
+        format: "date-time"
+
+  FollowerRequest:
+    type: "object"
+    properties:
+      userId:
+        type: "integer"
+
+  FollowerResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+
+  FollowersPerUserResponse:
+    type: "object"
+    properties:
+      followersCount:
+        type: "integer"
+      content:
+        type: "array"
+        items:
+          $ref: "#/definitions/FollowerResponse"
+
+
+
+
+
