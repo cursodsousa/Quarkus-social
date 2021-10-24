@@ -54,6 +54,8 @@ paths:
           description: "Invalid input"
         "201":
           description: "User created"
+          schema:
+            $ref: "#/definitions/User"
 
   /users/{userId}/posts:
     post:
@@ -66,7 +68,7 @@ paths:
         - "application/json"
 
       parameters:
-        - in: "body"
+        - in: body
           name: "User Post Data"
           required: true
           schema:
@@ -107,21 +109,29 @@ paths:
     put:
       tags:
         - "followers"
+      summary: "Follow a user"
       parameters:
-        - name: userId
+        - name: "userId"
           description: "the user identifier, as userId"
           in: path
           required: true
-          type: "string"
+          type: "integer"
+
+        - name: "Follower data"
+          description: "the user identifier, as userId"
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/FollowerRequest"
       responses:
         "200":
           description: "Ok"
-          schema:
-            $ref: "#/definitions/FollowerRequest"
+
 
     get:
       tags:
         - "followers"
+      summary: "List followers of a user"
       parameters:
         - name: userId
           description: "the user identifier, as userId"
@@ -136,7 +146,24 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/FollowersPerUserResponse"
-
+    delete:
+      tags:
+        - "followers"
+      summary: "Unfollow a user"
+      parameters:
+        - name: userId
+          description: "the user identifier, as userId"
+          in: path
+          required: true
+          type: "integer"
+        - name: followerId
+          description: "the follower identifier, as followerId"
+          in: query
+          required: true
+          type: "integer"
+      responses:
+        "204":
+          description: "Ok! No content"
 
 
 definitions:
@@ -178,7 +205,7 @@ definitions:
   FollowerRequest:
     type: "object"
     properties:
-      userId:
+      followerId:
         type: "integer"
 
   FollowerResponse:
