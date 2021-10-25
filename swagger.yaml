@@ -124,8 +124,10 @@ paths:
           schema:
             $ref: "#/definitions/FollowerRequest"
       responses:
-        "200":
-          description: "Ok"
+        "204":
+          description: "No Content"
+        "409":
+          description: "Conflict: User following itself"
 
 
     get:
